@@ -111,7 +111,14 @@ export default function MapboxComponent({
       },
       trackUserLocation: true,
       showAccuracyCircle: true,
-      showUserHeading: true
+      showUserHeading: true,
+      fitBoundsOptions: {
+        maxZoom: 11,
+        padding: 100,
+        animate: true,
+        duration: 1500,
+        essential: true
+      }
     })
     
     console.log('geolocate control created:', geolocateControl.current ? 'yes' : 'no')
