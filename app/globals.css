@@ -48,6 +48,7 @@
   --color-herb-green: oklch(0.65 0.12 145);
   --color-wood-brown: oklch(0.55 0.1 60);
   --color-airbnb-red: oklch(0.67 0.2 22);
+  --food-truck-red: oklch(0.67 0.2 22);            /* airbnb-inspired red for open food trucks */
 }
 
 /* 

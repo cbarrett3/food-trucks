@@ -17,3 +17,6 @@
 - use unidirectional dataflow and react context for state management if needed
 - use shadcn components for ui, and customize further with tailwind as needed
 - use radix ui components for more custom components
+
+- use mapbox for maps, and optimize for performance on any device
+- consider that we could have thousands of food trucks being displayed, and it needs to be rapid.

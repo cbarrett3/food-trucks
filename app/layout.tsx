@@ -11,12 +11,6 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "Food Truckies | Find Food Trucks Near You",
   description: "Discover the best food trucks in your area with real-time location tracking and reviews.",
-  manifest: "/manifest.json",
-  generator: 'v0.dev',
-  icons: {
-    icon: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
-  },
 }
 
 export default function RootLayout({
