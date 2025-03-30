@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react"
 import { MapView } from "@/components/map-view"
 import { FoodTruckList } from "@/components/food-truck-list"
-import { CategoryFilter } from "@/components/category-filter"
+import { FilterBar } from "@/components/filter-bar"
 import { LocationNotification } from "@/components/location-notification"
 import { Button } from "@/components/ui/button"
 import { MapPin, List, X, Check } from "lucide-react"
@@ -86,7 +86,7 @@ export function HomeView() {
   return (
     <VisibleTrucksProvider>
       <div className="flex flex-col min-h-[calc(100vh-4rem)]">
-        <CategoryFilter />
+        <FilterBar />
 
         {/* view toggle buttons */}
         <div className="flex justify-center my-2">
