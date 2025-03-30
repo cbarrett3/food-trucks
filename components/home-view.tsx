@@ -20,7 +20,7 @@ export function HomeView() {
   const [showLocationSuccess, setShowLocationSuccess] = useState(false)
   const locationPromptDismissed = useRef(false)
 
-  // check if location prompt should be shown based on localStorage
+  // check if location prompt should be shown based on local storage
   useEffect(() => {
     // check if we've already dismissed the prompt or granted permission
     const promptDismissed = localStorage.getItem('locationPromptDismissed') === 'true'
@@ -29,7 +29,7 @@ export function HomeView() {
     locationPromptDismissed.current = promptDismissed
     setLocationPermissionGranted(permissionGranted)
     
-    console.log('Location permission from localStorage:', permissionGranted)
+    console.log('location permission from local storage:', permissionGranted)
     
     // only show prompt if neither dismissed nor permission granted
     setShowLocationPrompt(!promptDismissed && !permissionGranted)
@@ -38,9 +38,9 @@ export function HomeView() {
     if (navigator.permissions && navigator.permissions.query) {
       navigator.permissions.query({ name: "geolocation" as PermissionName })
         .then(status => {
-          console.log('Permissions API status:', status.state)
+          console.log('permissions api status:', status.state)
           if (status.state === "granted") {
-            console.log('Setting location permission to true from Permissions API')
+            console.log('setting location permission to true from permissions api')
             setLocationPermissionGranted(true)
             localStorage.setItem('locationPermissionGranted', 'true')
             setShowLocationPrompt(false)

@@ -8,7 +8,7 @@ import { FoodTruckDetailDrawer } from "./food-truck-detail-drawer"
 import { foodTrucks } from "@/data/food-trucks"
 import type { FoodTruck } from "@/types/food-truck"
 
-// dynamically import mapbox component with no SSR
+// dynamically import mapbox component with no ssr
 const MapboxComponent = dynamic(
   () => import("@/components/mapbox-component"),
   { 
@@ -45,7 +45,11 @@ export function MapView({ locationPermissionGranted = false }: MapViewProps) {
   }
   
   return (
-    <div className="relative w-full h-[calc(100vh-8rem)]" aria-label="food truck map view">
+    <div 
+      className="relative w-full h-[calc(100vh-8rem)]" 
+      aria-label="food truck map view"
+      role="region"
+    >
       <MapboxComponent 
         theme={theme} 
         onTruckSelect={handleTruckSelect}

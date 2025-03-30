@@ -10,13 +10,13 @@ import { useMapboxCluster } from "@/hooks/use-mapbox-clusters"
 import { useVisibleTrucks } from "@/context/visible-trucks-context"
 
 // mapbox access token from environment variables
-const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
-const MAPBOX_STYLE = process.env.NEXT_PUBLIC_MAPBOX_STYLE || 'mapbox://styles/mapbox/light-v11'
+const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
+const mapboxStyle = process.env.NEXT_PUBLIC_MAPBOX_STYLE || 'mapbox://styles/mapbox/light-v11'
 
 // default map settings - minneapolis/st. paul
-const DEFAULT_LATITUDE = 44.9778
-const DEFAULT_LONGITUDE = -93.2650
-const DEFAULT_ZOOM = 12
+const defaultLatitude = 44.9778
+const defaultLongitude = -93.2650
+const defaultZoom = 12
 
 // types for props
 interface MapboxComponentProps {
@@ -44,8 +44,8 @@ export default function MapboxComponent({
     center: mapboxgl.LngLatLike;
     zoom: number;
   }>({
-    center: [DEFAULT_LONGITUDE, DEFAULT_LATITUDE],
-    zoom: DEFAULT_ZOOM
+    center: [defaultLongitude, defaultLatitude],
+    zoom: defaultZoom
   })
   
   // use the cluster hook
@@ -62,7 +62,7 @@ export default function MapboxComponent({
     const wasLocationActive = localStorage.getItem('userLocationActive') === 'true'
     setIsUserLocationActive(wasLocationActive)
     
-    // Try to get stored user location
+    // try to get stored user location
     const storedLat = localStorage.getItem('userLocationLat')
     const storedLng = localStorage.getItem('userLocationLng')
     
@@ -95,9 +95,9 @@ export default function MapboxComponent({
   const updateUserLocationMarker = useCallback(() => {
     if (!map.current || !userLocation) return
     
-    // Create a custom user location marker if it doesn't exist
+    // create a custom user location marker if it doesn't exist
     if (!userLocationMarker.current) {
-      // Create marker element
+      // create marker element
       const el = document.createElement('div')
       el.className = 'user-location-marker'
       el.style.width = '20px'
@@ -107,7 +107,7 @@ export default function MapboxComponent({
       el.style.border = '3px solid rgb(0, 120, 255)'
       el.style.boxShadow = '0 0 0 2px white'
       
-      // Create the marker
+      // create the marker
       userLocationMarker.current = new mapboxgl.Marker({
         element: el,
         anchor: 'center'
@@ -115,17 +115,17 @@ export default function MapboxComponent({
         .setLngLat([userLocation.lng, userLocation.lat])
         .addTo(map.current)
     } else {
-      // Update existing marker position
+      // update existing marker position
       userLocationMarker.current.setLngLat([userLocation.lng, userLocation.lat])
     }
   }, [userLocation])
   
-  // Update marker when user location changes
+  // update marker when user location changes
   useEffect(() => {
     updateUserLocationMarker()
   }, [userLocation, updateUserLocationMarker])
   
-  // Get current user location
+  // get current user location
   const getCurrentLocation = useCallback(() => {
     if (!locationPermissionGranted) return
     
@@ -135,14 +135,14 @@ export default function MapboxComponent({
       (position) => {
         const { longitude, latitude } = position.coords
         
-        // Store the user location
+        // store the user location
         setUserLocation({ lng: longitude, lat: latitude })
         localStorage.setItem('userLocationLat', latitude.toString())
         localStorage.setItem('userLocationLng', longitude.toString())
         localStorage.setItem('userLocationActive', 'true')
         setIsUserLocationActive(true)
         
-        // Fly to the location
+        // fly to the location
         map.current?.flyTo({
           center: [longitude, latitude],
           zoom: 11,
@@ -155,7 +155,7 @@ export default function MapboxComponent({
         setIsLocating(false)
       },
       (error) => {
-        console.error('Error getting user location:', error)
+        console.error('error getting user location:', error)
         setIsLocating(false)
         localStorage.setItem('userLocationActive', 'false')
         setIsUserLocationActive(false)
@@ -165,17 +165,17 @@ export default function MapboxComponent({
   
   // initialize map only once
   useEffect(() => {
-    if (mapInitialized.current || map.current || !MAPBOX_TOKEN || !mapContainer.current) return
+    if (mapInitialized.current || map.current || !mapboxToken || !mapContainer.current) return
     
-    console.log('initializing map with token:', MAPBOX_TOKEN ? 'token exists' : 'no token')
+    console.log('initializing map with token:', mapboxToken ? 'token exists' : 'no token')
     
     // set mapbox access token
-    mapboxgl.accessToken = MAPBOX_TOKEN
+    mapboxgl.accessToken = mapboxToken
     
     // create map
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
-      style: theme === 'dark' ? 'mapbox://styles/mapbox/dark-v11' : MAPBOX_STYLE,
+      style: theme === 'dark' ? 'mapbox://styles/mapbox/dark-v11' : mapboxStyle,
       center: lastPosition.current.center,
       zoom: lastPosition.current.zoom,
       dragRotate: false,
@@ -211,14 +211,14 @@ export default function MapboxComponent({
         map.current.on('moveend', saveMapPosition)
         map.current.on('zoomend', saveMapPosition)
         
-        // If we have a stored user location and it was active, show it
+        // if we have a stored user location and it was active, show it
         if (isUserLocationActive && userLocation) {
           updateUserLocationMarker()
         }
         
         // if location permission is granted and initial location not set yet, get user location
         if (locationPermissionGranted && !initialLocationSet.current) {
-          // Get user location after a short delay to ensure map is ready
+          // get user location after a short delay to ensure map is ready
           setTimeout(() => {
             console.log('getting initial user location')
             getCurrentLocation()
@@ -251,7 +251,7 @@ export default function MapboxComponent({
         mapInitialized.current = false
       }
     }
-  }, [MAPBOX_TOKEN, theme, setupClusters, locationPermissionGranted, saveMapPosition, 
+  }, [mapboxToken, theme, setupClusters, locationPermissionGranted, saveMapPosition, 
       isUserLocationActive, userLocation, updateUserLocationMarker, getCurrentLocation])
   
   // update map style when theme changes
@@ -260,7 +260,7 @@ export default function MapboxComponent({
     
     const style = theme === 'dark' 
       ? 'mapbox://styles/mapbox/dark-v11' 
-      : MAPBOX_STYLE
+      : mapboxStyle
     
     // save current position before style change
     const currentCenter = map.current.getCenter()
@@ -277,7 +277,7 @@ export default function MapboxComponent({
         map.current.setCenter([currentCenter.lng, currentCenter.lat])
         map.current.setZoom(currentZoom)
         
-        // Restore user location marker if active
+        // restore user location marker if active
         if (isUserLocationActive && userLocation) {
           updateUserLocationMarker()
         }
@@ -285,10 +285,10 @@ export default function MapboxComponent({
     })
   }, [theme, setupClusters, isUserLocationActive, userLocation, updateUserLocationMarker])
   
-  // Center on user location when button is clicked
+  // center on user location when button is clicked
   const handleLocationButtonClick = useCallback(() => {
     if (userLocation && map.current) {
-      // If we already have the user location, just fly to it
+      // if we already have the user location, just fly to it
       map.current.flyTo({
         center: [userLocation.lng, userLocation.lat],
         zoom: 11,
@@ -298,7 +298,7 @@ export default function MapboxComponent({
         essential: true
       })
     } else {
-      // Otherwise get the current location
+      // otherwise get the current location
       getCurrentLocation()
     }
   }, [userLocation, getCurrentLocation])
@@ -310,6 +310,7 @@ export default function MapboxComponent({
         ref={mapContainer} 
         className="w-full h-full absolute inset-0" 
         aria-label="interactive map showing food trucks in the twin cities area"
+        role="application"
       />
       
       {/* custom location button */}
@@ -325,6 +326,7 @@ export default function MapboxComponent({
           onClick={handleLocationButtonClick}
           disabled={isLocating}
           aria-label="center map on your location"
+          aria-live="polite"
         >
           <MapPin className="h-5 w-5" />
         </button>
