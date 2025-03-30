@@ -1,8 +1,19 @@
-- lowercase for all files (first-last.tsx)
+- lowercase kebab-case for all files (first-last.tsx)
 - next.js 15 and tailwind 4
 - files should not exceed 150 lines
 - code should be clean and readable
 - comments should always be entirely UNDERCASE
 - comments should be clear and concise
+- accessibility should be a priority, use aria-labels always
+- always use semantic html
+- always use proper html5 tags
 
 - design should be interactive and inspired by airbnb
+- design mobile-first always, with fully responsive design always being a must
+- extend for dark mode and light mode always when making changes
+- always use tailwind 4 best practices and reference tailwind docs frequently
+- use framer-motion for animations
+- all clickable items should have cursor:pointer on hover and consistently beautiful hover effects
+- use unidirectional dataflow and react context for state management if needed
+- use shadcn components for ui, and customize further with tailwind as needed
+- use radix ui components for more custom components
