@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { Heart, MapPin, X, Star } from "lucide-react"
 import type { FoodTruck } from "@/types/food-truck"
 import { cn } from "@/lib/utils"
+import { useAuthRequired } from "@/hooks/use-auth-required"
 
 interface FoodTruckMapCardProps {
   truck: FoodTruck
@@ -17,6 +18,17 @@ interface FoodTruckMapCardProps {
 
 export function FoodTruckMapCard({ truck, onClose }: FoodTruckMapCardProps) {
   const [isFavorite, setIsFavorite] = useState(false)
+  const { checkAuth } = useAuthRequired()
+
+  const toggleFavorite = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    
+    // check if user is authenticated before allowing to favorite
+    if (checkAuth("saving favorites")) {
+      setIsFavorite(!isFavorite)
+    }
+  }
 
   return (
     <Card className="w-full max-w-md shadow-xl overflow-hidden rounded-2xl border-border">
@@ -92,11 +104,7 @@ export function FoodTruckMapCard({ truck, onClose }: FoodTruckMapCardProps) {
                   variant="outline"
                   size="sm"
                   className="rounded-full text-xs px-3 py-1 h-auto border-border"
-                  onClick={(e) => {
-                    e.preventDefault()
-                    e.stopPropagation()
-                    setIsFavorite(!isFavorite)
-                  }}
+                  onClick={toggleFavorite}
                   aria-pressed={isFavorite}
                   aria-label={isFavorite ? "remove from favorites" : "add to favorites"}
                 >

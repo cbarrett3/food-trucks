@@ -12,6 +12,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Facebook, Truck, Sun, Moon } from "lucide-react"
 import { useTheme } from "next-themes"
 import { cn } from "@/lib/utils"
+import { motion } from "framer-motion"
 
 export function LoginForm() {
   const [isLoading, setIsLoading] = useState(false)
@@ -41,28 +42,37 @@ export function LoginForm() {
           <Button
             variant="outline"
             size="icon"
-            className="w-9 h-9 rounded-full border-border"
+            className="w-9 h-9 rounded-full border-border hover:bg-secondary/10"
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            aria-label={theme === "dark" ? "switch to light theme" : "switch to dark theme"}
           >
             <span className="sr-only">toggle theme</span>
             {mounted && theme === "dark" ? (
-              <Sun className="h-4 w-4 text-accent" />
+              <Sun className="h-4 w-4 text-accent" aria-hidden="true" />
             ) : (
-              <Moon className="h-4 w-4 text-secondary" />
+              <Moon className="h-4 w-4 text-secondary" aria-hidden="true" />
             )}
           </Button>
         </div>
       )}
       
-      <Link href="/" className="flex items-center gap-2 mb-8">
-        <div className="h-12 w-12 rounded-lg bg-primary flex items-center justify-center">
-          <Truck className="h-7 w-7 text-primary-foreground" />
-        </div>
+      <Link 
+        href="/" 
+        className="flex items-center gap-2 mb-8 hover:opacity-90 transition-opacity"
+        aria-label="return to home page"
+      >
+        <motion.div 
+          className="h-12 w-12 rounded-lg bg-primary flex items-center justify-center"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <Truck className="h-7 w-7 text-primary-foreground" aria-hidden="true" />
+        </motion.div>
         <span className="text-2xl font-bold">food truckies</span>
       </Link>
 
       <div className="w-full max-w-md">
-        <Card className="border-border">
+        <Card className="border-border shadow-lg">
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl font-bold text-center">welcome back</CardTitle>
             <CardDescription className="text-center">
@@ -71,7 +81,7 @@ export function LoginForm() {
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="email" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 mb-4">
+              <TabsList className="grid w-full grid-cols-2 mb-4" aria-label="sign in options">
                 <TabsTrigger value="email">email</TabsTrigger>
                 <TabsTrigger value="phone">phone</TabsTrigger>
               </TabsList>
@@ -79,19 +89,50 @@ export function LoginForm() {
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="email">email</Label>
-                    <Input id="email" type="email" placeholder="hello@example.com" required />
+                    <Input 
+                      id="email" 
+                      type="email" 
+                      placeholder="hello@example.com" 
+                      required 
+                      aria-required="true"
+                      autoComplete="email"
+                    />
                   </div>
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <Label htmlFor="password">password</Label>
-                      <Link href="#" className="text-sm text-primary hover:underline">
+                      <Link 
+                        href="#" 
+                        className="text-sm text-primary hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-sm"
+                      >
                         forgot password?
                       </Link>
                     </div>
-                    <Input id="password" type="password" required />
+                    <Input 
+                      id="password" 
+                      type="password" 
+                      required 
+                      aria-required="true"
+                      autoComplete="current-password"
+                    />
                   </div>
-                  <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground" disabled={isLoading}>
-                    {isLoading ? "signing in..." : "sign in"}
+                  <Button 
+                    type="submit" 
+                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground" 
+                    disabled={isLoading}
+                    aria-busy={isLoading}
+                  >
+                    {isLoading ? (
+                      <span className="flex items-center gap-2">
+                        <svg className="animate-spin h-4 w-4 text-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        signing in...
+                      </span>
+                    ) : (
+                      "sign in"
+                    )}
                   </Button>
                 </form>
               </TabsContent>
@@ -99,10 +140,32 @@ export function LoginForm() {
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="phone">phone number</Label>
-                    <Input id="phone" type="tel" placeholder="(123) 456-7890" required />
+                    <Input 
+                      id="phone" 
+                      type="tel" 
+                      placeholder="(123) 456-7890" 
+                      required 
+                      aria-required="true"
+                      autoComplete="tel"
+                    />
                   </div>
-                  <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground" disabled={isLoading}>
-                    {isLoading ? "sending code..." : "send verification code"}
+                  <Button 
+                    type="submit" 
+                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground" 
+                    disabled={isLoading}
+                    aria-busy={isLoading}
+                  >
+                    {isLoading ? (
+                      <span className="flex items-center gap-2">
+                        <svg className="animate-spin h-4 w-4 text-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        sending code...
+                      </span>
+                    ) : (
+                      "send verification code"
+                    )}
                   </Button>
                 </form>
               </TabsContent>
@@ -118,10 +181,14 @@ export function LoginForm() {
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-              <Button variant="outline" className="border-border">
+              <Button 
+                variant="outline" 
+                className="border-border hover:bg-secondary/10"
+                aria-label="sign in with google"
+              >
                 {/* only show google icon after mounting to prevent hydration mismatch */}
                 {mounted ? (
-                  <div className="mr-2 h-4 w-4 relative">
+                  <div className="mr-2 h-4 w-4 relative" aria-hidden="true">
                     {theme === "dark" ? (
                       <svg viewBox="0 0 24 24">
                         <path
@@ -167,8 +234,12 @@ export function LoginForm() {
                 )}
                 google
               </Button>
-              <Button variant="outline" className="border-border">
-                <Facebook className="mr-2 h-4 w-4" />
+              <Button 
+                variant="outline" 
+                className="border-border hover:bg-secondary/10"
+                aria-label="sign in with facebook"
+              >
+                <Facebook className="mr-2 h-4 w-4" aria-hidden="true" />
                 facebook
               </Button>
             </div>
@@ -176,17 +247,26 @@ export function LoginForm() {
           <CardFooter className="flex flex-col space-y-4">
             <div className="text-center text-sm">
               don't have an account?{" "}
-              <Link href="#" className="text-primary hover:underline">
+              <Link 
+                href="#" 
+                className="text-primary hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-sm"
+              >
                 sign up
               </Link>
             </div>
             <div className="text-center text-xs text-muted-foreground">
               by continuing, you agree to our{" "}
-              <Link href="#" className="underline underline-offset-2 hover:text-foreground">
+              <Link 
+                href="#" 
+                className="underline underline-offset-2 hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-sm"
+              >
                 terms of service
               </Link>{" "}
               and{" "}
-              <Link href="#" className="underline underline-offset-2 hover:text-foreground">
+              <Link 
+                href="#" 
+                className="underline underline-offset-2 hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-sm"
+              >
                 privacy policy
               </Link>
               .
@@ -194,36 +274,6 @@ export function LoginForm() {
           </CardFooter>
         </Card>
       </div>
-
-      {/* color palette showcase - only shown after mounting to prevent hydration mismatch */}
-      {mounted && (
-        <div className="fixed bottom-4 left-4 p-4 bg-card rounded-lg shadow-lg border border-border max-w-xs">
-          <h3 className="font-bold mb-2">food truck color palette</h3>
-          <div className="grid grid-cols-5 gap-2">
-            <div>
-              <div className="h-10 w-10 rounded-md bg-primary" title="food truck orange"></div>
-              <span className="text-xs">orange</span>
-            </div>
-            <div>
-              <div className="h-10 w-10 rounded-md bg-accent" title="warm yellow/green"></div>
-              <span className="text-xs">{theme === "dark" ? "green" : "yellow"}</span>
-            </div>
-            <div>
-              <div className="h-10 w-10 rounded-md bg-secondary" title="night blue/yellow"></div>
-              <span className="text-xs">{theme === "dark" ? "yellow" : "blue"}</span>
-            </div>
-            <div>
-              <div className="h-10 w-10 rounded-md bg-[oklch(0.65_0.12_145)]" title="herb green"></div>
-              <span className="text-xs">green</span>
-            </div>
-            <div>
-              <div className="h-10 w-10 rounded-md bg-[oklch(0.55_0.1_60)]" title="wood brown"></div>
-              <span className="text-xs">brown</span>
-            </div>
-          </div>
-          <div className="text-xs mt-2 text-muted-foreground">click theme toggle to see dark mode</div>
-        </div>
-      )}
     </div>
   )
 }

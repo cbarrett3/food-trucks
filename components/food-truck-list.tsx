@@ -11,15 +11,21 @@ import { Heart, MapPin, Star } from "lucide-react"
 import { foodTrucks } from "@/data/food-trucks"
 import { cn } from "@/lib/utils"
 import { motion } from "framer-motion"
+import { useAuthRequired } from "@/hooks/use-auth-required"
 
 export function FoodTruckList() {
   const [favorites, setFavorites] = useState<string[]>([])
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
+  const { checkAuth } = useAuthRequired()
 
   const toggleFavorite = (id: string, e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    setFavorites(favorites.includes(id) ? favorites.filter((fav) => fav !== id) : [...favorites, id])
+    
+    // check if user is authenticated before allowing to favorite
+    if (checkAuth("saving favorites")) {
+      setFavorites(favorites.includes(id) ? favorites.filter((fav) => fav !== id) : [...favorites, id])
+    }
   }
 
   return (
