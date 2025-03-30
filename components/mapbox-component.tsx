@@ -32,11 +32,12 @@ export default function MapboxComponent({
 }: MapboxComponentProps) {
   const mapContainer = useRef<HTMLDivElement>(null)
   const map = useRef<mapboxgl.Map | null>(null)
-  const geolocateControl = useRef<mapboxgl.GeolocateControl | null>(null)
+  const userLocationMarker = useRef<mapboxgl.Marker | null>(null)
   const [mapLoaded, setMapLoaded] = useState(false)
   const [isLocating, setIsLocating] = useState(false)
   const mapInitialized = useRef(false)
   const initialLocationSet = useRef(false)
+  const [userLocation, setUserLocation] = useState<{lng: number, lat: number} | null>(null)
   
   // store last map position and zoom to preserve when toggling views
   const lastPosition = useRef<{
@@ -52,6 +53,26 @@ export default function MapboxComponent({
   
   // use the visible trucks context
   const { setMapBounds } = useVisibleTrucks()
+  
+  // track if user location is active
+  const [isUserLocationActive, setIsUserLocationActive] = useState(false)
+  
+  // check if location was active before
+  useEffect(() => {
+    const wasLocationActive = localStorage.getItem('userLocationActive') === 'true'
+    setIsUserLocationActive(wasLocationActive)
+    
+    // Try to get stored user location
+    const storedLat = localStorage.getItem('userLocationLat')
+    const storedLng = localStorage.getItem('userLocationLng')
+    
+    if (storedLat && storedLng) {
+      setUserLocation({
+        lat: parseFloat(storedLat),
+        lng: parseFloat(storedLng)
+      })
+    }
+  }, [])
   
   // save map position when it changes
   const saveMapPosition = useCallback(() => {
@@ -69,6 +90,78 @@ export default function MapboxComponent({
     const bounds = map.current.getBounds()
     setMapBounds(bounds)
   }, [setMapBounds])
+  
+  // update user location marker
+  const updateUserLocationMarker = useCallback(() => {
+    if (!map.current || !userLocation) return
+    
+    // Create a custom user location marker if it doesn't exist
+    if (!userLocationMarker.current) {
+      // Create marker element
+      const el = document.createElement('div')
+      el.className = 'user-location-marker'
+      el.style.width = '20px'
+      el.style.height = '20px'
+      el.style.borderRadius = '50%'
+      el.style.background = 'rgba(0, 120, 255, 0.3)'
+      el.style.border = '3px solid rgb(0, 120, 255)'
+      el.style.boxShadow = '0 0 0 2px white'
+      
+      // Create the marker
+      userLocationMarker.current = new mapboxgl.Marker({
+        element: el,
+        anchor: 'center'
+      })
+        .setLngLat([userLocation.lng, userLocation.lat])
+        .addTo(map.current)
+    } else {
+      // Update existing marker position
+      userLocationMarker.current.setLngLat([userLocation.lng, userLocation.lat])
+    }
+  }, [userLocation])
+  
+  // Update marker when user location changes
+  useEffect(() => {
+    updateUserLocationMarker()
+  }, [userLocation, updateUserLocationMarker])
+  
+  // Get current user location
+  const getCurrentLocation = useCallback(() => {
+    if (!locationPermissionGranted) return
+    
+    setIsLocating(true)
+    
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { longitude, latitude } = position.coords
+        
+        // Store the user location
+        setUserLocation({ lng: longitude, lat: latitude })
+        localStorage.setItem('userLocationLat', latitude.toString())
+        localStorage.setItem('userLocationLng', longitude.toString())
+        localStorage.setItem('userLocationActive', 'true')
+        setIsUserLocationActive(true)
+        
+        // Fly to the location
+        map.current?.flyTo({
+          center: [longitude, latitude],
+          zoom: 11,
+          padding: 100,
+          animate: true,
+          duration: 1500,
+          essential: true
+        })
+        
+        setIsLocating(false)
+      },
+      (error) => {
+        console.error('Error getting user location:', error)
+        setIsLocating(false)
+        localStorage.setItem('userLocationActive', 'false')
+        setIsUserLocationActive(false)
+      }
+    )
+  }, [locationPermissionGranted])
   
   // initialize map only once
   useEffect(() => {
@@ -104,25 +197,6 @@ export default function MapboxComponent({
       'bottom-left'
     )
     
-    // create geolocate control
-    geolocateControl.current = new mapboxgl.GeolocateControl({
-      positionOptions: {
-        enableHighAccuracy: true
-      },
-      trackUserLocation: true,
-      showAccuracyCircle: true,
-      showUserHeading: true,
-      fitBoundsOptions: {
-        maxZoom: 11,
-        padding: 100,
-        animate: true,
-        duration: 1500,
-        essential: true
-      }
-    })
-    
-    console.log('geolocate control created:', geolocateControl.current ? 'yes' : 'no')
-    
     // when map loads
     map.current.on('load', () => {
       console.log('map loaded successfully')
@@ -137,38 +211,19 @@ export default function MapboxComponent({
         map.current.on('moveend', saveMapPosition)
         map.current.on('zoomend', saveMapPosition)
         
-        // add the geolocate control to the map AFTER it's loaded
-        if (geolocateControl.current) {
-          console.log('adding geolocate control to map')
-          map.current.addControl(geolocateControl.current, 'bottom-right')
-          
-          // set up geolocate events
-          geolocateControl.current.on('geolocate', () => {
-            console.log('geolocate triggered')
-            setIsLocating(true)
-          })
-          
-          // when geolocate ends
-          geolocateControl.current.on('trackuserlocationend', () => {
-            console.log('geolocate tracking ended')
-            setIsLocating(false)
-          })
-          
-          // when geolocate errors
-          geolocateControl.current.on('error', (e) => {
-            console.error('geolocate error:', e)
-            setIsLocating(false)
-          })
-          
-          // if location permission is granted and initial location not set yet, trigger geolocate
-          if (locationPermissionGranted && !initialLocationSet.current) {
-            // trigger the geolocate control after a short delay to ensure it's ready
-            setTimeout(() => {
-              console.log('triggering geolocate control')
-              geolocateControl.current?.trigger()
-              initialLocationSet.current = true
-            }, 1000)
-          }
+        // If we have a stored user location and it was active, show it
+        if (isUserLocationActive && userLocation) {
+          updateUserLocationMarker()
+        }
+        
+        // if location permission is granted and initial location not set yet, get user location
+        if (locationPermissionGranted && !initialLocationSet.current) {
+          // Get user location after a short delay to ensure map is ready
+          setTimeout(() => {
+            console.log('getting initial user location')
+            getCurrentLocation()
+            initialLocationSet.current = true
+          }, 1000)
         }
       }
     })
@@ -185,13 +240,19 @@ export default function MapboxComponent({
         map.current.off('moveend', saveMapPosition)
         map.current.off('zoomend', saveMapPosition)
         
+        // remove marker
+        if (userLocationMarker.current) {
+          userLocationMarker.current.remove()
+          userLocationMarker.current = null
+        }
+        
         map.current.remove()
         map.current = null
         mapInitialized.current = false
-        geolocateControl.current = null
       }
     }
-  }, [MAPBOX_TOKEN, theme, setupClusters, locationPermissionGranted, saveMapPosition, setMapBounds])
+  }, [MAPBOX_TOKEN, theme, setupClusters, locationPermissionGranted, saveMapPosition, 
+      isUserLocationActive, userLocation, updateUserLocationMarker, getCurrentLocation])
   
   // update map style when theme changes
   useEffect(() => {
@@ -215,29 +276,32 @@ export default function MapboxComponent({
         // restore position after style change
         map.current.setCenter([currentCenter.lng, currentCenter.lat])
         map.current.setZoom(currentZoom)
+        
+        // Restore user location marker if active
+        if (isUserLocationActive && userLocation) {
+          updateUserLocationMarker()
+        }
       }
     })
-  }, [theme, setupClusters])
+  }, [theme, setupClusters, isUserLocationActive, userLocation, updateUserLocationMarker])
   
-  // trigger geolocate when permission is granted for the first time
-  useEffect(() => {
-    if (locationPermissionGranted && mapInitialized.current && map.current && !initialLocationSet.current && geolocateControl.current) {
-      // trigger the geolocate control after a short delay to ensure it's ready
-      setTimeout(() => {
-        console.log('triggering geolocate from permission change')
-        geolocateControl.current?.trigger()
-        initialLocationSet.current = true
-      }, 1000)
+  // Center on user location when button is clicked
+  const handleLocationButtonClick = useCallback(() => {
+    if (userLocation && map.current) {
+      // If we already have the user location, just fly to it
+      map.current.flyTo({
+        center: [userLocation.lng, userLocation.lat],
+        zoom: 11,
+        padding: 100,
+        animate: true,
+        duration: 1500,
+        essential: true
+      })
+    } else {
+      // Otherwise get the current location
+      getCurrentLocation()
     }
-  }, [locationPermissionGranted])
-  
-  // add a custom location button as fallback in case the mapbox control doesn't appear
-  const handleCustomLocationClick = useCallback(() => {
-    if (geolocateControl.current) {
-      console.log('triggering geolocate from custom button')
-      geolocateControl.current.trigger()
-    }
-  }, [])
+  }, [userLocation, getCurrentLocation])
   
   return (
     <div className="relative w-full h-full">
@@ -248,14 +312,18 @@ export default function MapboxComponent({
         aria-label="interactive map showing food trucks in the twin cities area"
       />
       
-      {/* custom location button as fallback */}
+      {/* custom location button */}
       {locationPermissionGranted && (
         <button
-          className="absolute bottom-24 right-6 p-3 rounded-full shadow-lg z-50 
-                    bg-primary text-primary-foreground hover:bg-primary/90 
-                    cursor-pointer transform hover:scale-105 active:scale-95
-                    transition-all border border-primary/20"
-          onClick={handleCustomLocationClick}
+          className={cn(
+            "absolute bottom-6 right-6 p-3 rounded-full shadow-lg z-50",
+            "bg-primary text-primary-foreground hover:bg-primary/90",
+            "cursor-pointer transform hover:scale-105 active:scale-95",
+            "transition-all border border-primary/20",
+            isLocating && "animate-pulse"
+          )}
+          onClick={handleLocationButtonClick}
+          disabled={isLocating}
           aria-label="center map on your location"
         >
           <MapPin className="h-5 w-5" />
