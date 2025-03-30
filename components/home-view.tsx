@@ -85,63 +85,82 @@ export function HomeView() {
 
   return (
     <VisibleTrucksProvider>
-      <div className="flex flex-col min-h-[calc(100vh-4rem)]">
+      <div className="flex flex-col min-h-[calc(100vh-4rem)] bg-background dark:bg-gray-900">
         <FilterBar />
 
         {/* view toggle buttons */}
         <div className="flex justify-center my-2">
-          <div className="bg-muted/20 rounded-lg p-1 flex gap-1">
-            <button
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="bg-background/80 dark:bg-gray-800/50 backdrop-blur-sm rounded-lg p-1 flex gap-1 border border-border/10 dark:border-gray-700/30 shadow-sm"
+          >
+            <motion.button
               onClick={() => setViewMode("map")}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
               className={cn(
-                "flex items-center gap-1 px-3 py-1.5 rounded-md transition-colors cursor-pointer",
+                "flex items-center gap-1 px-3 py-1.5 rounded-md transition-all duration-200 cursor-pointer",
                 viewMode === "map" 
-                  ? "bg-background text-foreground shadow-sm" 
-                  : "text-muted-foreground hover:text-foreground"
+                  ? "bg-gradient-to-r from-primary/90 to-primary text-primary-foreground shadow-sm" 
+                  : "text-muted-foreground hover:text-foreground hover:bg-background/90 dark:hover:bg-gray-800/90"
               )}
               aria-label="switch to map view"
               aria-pressed={viewMode === "map"}
             >
               <MapPin className="w-4 h-4" />
               <span className="text-sm font-medium">map</span>
-            </button>
-            <button
+            </motion.button>
+            <motion.button
               onClick={() => setViewMode("list")}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
               className={cn(
-                "flex items-center gap-1 px-3 py-1.5 rounded-md transition-colors cursor-pointer",
+                "flex items-center gap-1 px-3 py-1.5 rounded-md transition-all duration-200 cursor-pointer",
                 viewMode === "list" 
-                  ? "bg-background text-foreground shadow-sm" 
-                  : "text-muted-foreground hover:text-foreground"
+                  ? "bg-gradient-to-r from-primary/90 to-primary text-primary-foreground shadow-sm" 
+                  : "text-muted-foreground hover:text-foreground hover:bg-background/90 dark:hover:bg-gray-800/90"
               )}
               aria-label="switch to list view"
               aria-pressed={viewMode === "list"}
             >
               <List className="w-4 h-4" />
               <span className="text-sm font-medium">list</span>
-            </button>
-          </div>
+            </motion.button>
+          </motion.div>
         </div>
 
         <section className="relative flex-1 overflow-hidden" aria-live="polite">
           {/* keep mapview always mounted but hide it when in list view */}
-          <div 
+          <motion.div 
             className={cn(
-              "absolute inset-0 transition-opacity duration-300",
+              "absolute inset-0 transition-all duration-300",
               viewMode === "map" ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
             )}
             aria-hidden={viewMode !== "map"}
+            initial={{ opacity: 0 }}
+            animate={{ 
+              opacity: viewMode === "map" ? 1 : 0,
+              scale: viewMode === "map" ? 1 : 0.98
+            }}
+            transition={{ duration: 0.3 }}
           >
             <MapView locationPermissionGranted={locationPermissionGranted} />
-          </div>
+          </motion.div>
           
           {/* only render the list when in list view for performance */}
           {viewMode === "list" && (
-            <div
+            <motion.div
               className="h-full overflow-y-auto pb-20 scrollbar-thin scrollbar-thumb-muted-foreground/20 scrollbar-track-transparent"
               aria-label="list view of food trucks"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.3 }}
             >
               <FoodTruckList />
-            </div>
+            </motion.div>
           )}
 
           {/* location permission notification */}
@@ -155,7 +174,7 @@ export function HomeView() {
               role="alert"
               aria-live="polite"
             >
-              <div className="bg-background/90 dark:bg-background/80 backdrop-blur-md shadow-lg rounded-full px-5 py-3 max-w-md flex items-center gap-3 border border-border">
+              <div className="bg-background/90 dark:bg-gray-800/80 backdrop-blur-md shadow-lg rounded-full px-5 py-3 max-w-md flex items-center gap-3 border border-border/10 dark:border-gray-700/30">
                 <div className="flex-shrink-0 h-8 w-8 rounded-full bg-accent flex items-center justify-center">
                   <MapPin className="h-4 w-4 text-accent-foreground" aria-hidden="true" />
                 </div>
@@ -194,7 +213,7 @@ export function HomeView() {
               role="status"
               aria-live="polite"
             >
-              <div className="bg-background/90 dark:bg-background/80 backdrop-blur-md shadow-lg rounded-full px-5 py-3 flex items-center gap-3 border border-border">
+              <div className="bg-background/90 dark:bg-gray-800/80 backdrop-blur-md shadow-lg rounded-full px-5 py-3 flex items-center gap-3 border border-border/10 dark:border-gray-700/30">
                 <div className="flex-shrink-0 h-8 w-8 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
                   <Check className="h-4 w-4 text-green-600 dark:text-green-400" aria-hidden="true" />
                 </div>
