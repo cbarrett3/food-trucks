@@ -1,0 +1,8 @@
+- lowercase for all files (first-last.tsx)
+- next.js 15 and tailwind 4
+- files should not exceed 150 lines
+- code should be clean and readable
+- comments should always be entirely UNDERCASE
+- comments should be clear and concise
+
+- design should be interactive and inspired by airbnb
