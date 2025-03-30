@@ -7,6 +7,7 @@ import { foodTrucks } from "@/data/food-trucks"
 import { MapPin } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useMapboxCluster } from "@/hooks/use-mapbox-clusters"
+import { useVisibleTrucks } from "@/context/visible-trucks-context"
 
 // mapbox access token from environment variables
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
@@ -49,6 +50,9 @@ export default function MapboxComponent({
   // use the cluster hook
   const { setupClusters, handleClusterClick } = useMapboxCluster({ map, onTruckSelect })
   
+  // use the visible trucks context
+  const { setMapBounds } = useVisibleTrucks()
+  
   // save map position when it changes
   const saveMapPosition = useCallback(() => {
     if (!map.current) return
@@ -60,7 +64,11 @@ export default function MapboxComponent({
       center: [center.lng, center.lat],
       zoom
     }
-  }, [])
+    
+    // update visible trucks context with new map bounds
+    const bounds = map.current.getBounds()
+    setMapBounds(bounds)
+  }, [setMapBounds])
   
   // initialize map only once
   useEffect(() => {
@@ -176,7 +184,7 @@ export default function MapboxComponent({
         geolocateControl.current = null
       }
     }
-  }, [MAPBOX_TOKEN, theme, setupClusters, locationPermissionGranted, saveMapPosition])
+  }, [MAPBOX_TOKEN, theme, setupClusters, locationPermissionGranted, saveMapPosition, setMapBounds])
   
   // update map style when theme changes
   useEffect(() => {
