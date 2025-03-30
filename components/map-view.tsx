@@ -26,7 +26,11 @@ const MapboxComponent = dynamic(
   }
 )
 
-export function MapView() {
+interface MapViewProps {
+  locationPermissionGranted?: boolean;
+}
+
+export function MapView({ locationPermissionGranted = false }: MapViewProps) {
   const [selectedTruckId, setSelectedTruckId] = useState<string | null>(null)
   const { theme } = useTheme()
   
@@ -41,17 +45,18 @@ export function MapView() {
   }
   
   return (
-    <div className="relative w-full h-[calc(100vh-8rem)]">
+    <div className="relative w-full h-[calc(100vh-8rem)]" aria-label="food truck map view">
       <MapboxComponent 
         theme={theme} 
-        onTruckSelect={handleTruckSelect} 
+        onTruckSelect={handleTruckSelect}
+        locationPermissionGranted={locationPermissionGranted}
       />
       
-      {/* Food truck detail drawer */}
+      {/* food truck detail drawer */}
       <FoodTruckDetailDrawer 
         truck={selectedTruck} 
         open={!!selectedTruck}
-        onClose={() => setSelectedTruckId(null)}
+        onClose={() => handleTruckSelect(null)}
       />
     </div>
   )
