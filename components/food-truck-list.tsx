@@ -46,7 +46,7 @@ export function FoodTruckList() {
             >
               <Link
                 href={`/truck/${truck.id}`}
-                className="block h-full"
+                className="block h-full cursor-pointer"
                 onMouseEnter={() => setActiveIndex(index)}
                 onMouseLeave={() => setActiveIndex(null)}
                 aria-label={`view details for ${truck.name}${!truck.isOpen ? ', currently closed' : ''}`}
@@ -69,7 +69,7 @@ export function FoodTruckList() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="absolute top-3 right-3 rounded-full bg-background/90 backdrop-blur-sm hover:bg-background z-10 shadow-md"
+                      className="absolute top-3 right-3 rounded-full bg-background/90 backdrop-blur-sm hover:bg-background z-10 shadow-md cursor-pointer"
                       onClick={(e) => toggleFavorite(truck.id, e)}
                       aria-label={favorites.includes(truck.id) ? "remove from favorites" : "add to favorites"}
                       aria-pressed={favorites.includes(truck.id)}
@@ -122,7 +122,7 @@ export function FoodTruckList() {
                     <header className="flex justify-between items-start">
                       <h3 className="font-semibold text-lg">{truck.name}</h3>
                       <div className="flex items-center gap-1">
-                        <Star className="h-3.5 w-3.5 text-yellow fill-yellow" aria-hidden="true" />
+                        <Star className="h-3.5 w-3.5 text-yellow-500 fill-yellow-500" aria-hidden="true" />
                         <span 
                           className="text-sm font-medium"
                           aria-label={`rating ${truck.rating} out of 5`}
