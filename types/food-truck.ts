@@ -10,6 +10,10 @@ export interface FoodTruck {
   reviewCount: number
   distance: number
   location: string
+  coordinates: {
+    latitude: number
+    longitude: number
+  }
   tags: string[]
   phone: string
   website: string
@@ -34,4 +38,3 @@ export interface FoodTruck {
     text: string
   }[]
 }
-

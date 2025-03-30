@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { MapView } from "@/components/map-view"
 import { FoodTruckList } from "@/components/food-truck-list"
 import { CategoryFilter } from "@/components/category-filter"
+import { LocationNotification } from "@/components/location-notification"
 import { Button } from "@/components/ui/button"
 import { MapPin, List } from "lucide-react"
 import { useMobile } from "@/hooks/use-mobile"
@@ -56,6 +57,9 @@ export function HomeView() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Twin Cities location notification */}
+        <LocationNotification />
 
         {/* location permission notification */}
         <AnimatePresence>
