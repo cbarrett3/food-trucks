@@ -10,6 +10,7 @@ import { OperatorSessionControl } from "@/components/operator-session-control"
 import { OperatorSubscriptionPlan } from "@/components/operator-subscription-plan"
 import { OperatorProfileEditor } from "@/components/operator-profile-editor"
 import { OperatorHoursEditor } from "@/components/operator-hours-editor"
+import { OperatorMenuEditor } from "@/components/operator-menu-editor"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 
@@ -165,18 +166,9 @@ export default function OperatorDashboardPage() {
                 >
                   <div className="flex items-center justify-between">
                     <h1 className="text-2xl font-bold text-foreground/90 dark:text-foreground/95">menu management</h1>
-                    <Button aria-label="add new menu item">add item</Button>
                   </div>
                   
-                  <Card className="shadow-sm border-border/30 dark:border-gray-800/40 bg-background/80 dark:bg-gray-900/60 backdrop-blur-sm">
-                    <CardHeader>
-                      <CardTitle className="text-sm font-medium text-foreground/90 dark:text-foreground/95">menu items</CardTitle>
-                      <CardDescription className="text-muted-foreground/80 dark:text-muted-foreground/70">manage your food truck's offerings</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-muted-foreground/80 dark:text-muted-foreground/70">menu management interface will be implemented here</p>
-                    </CardContent>
-                  </Card>
+                  <OperatorMenuEditor />
                 </motion.div>
               )}
               
