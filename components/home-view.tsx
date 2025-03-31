@@ -6,11 +6,12 @@ import { FoodTruckList } from "@/components/food-truck-list"
 import { FilterBar } from "@/components/filter-bar"
 import { LocationNotification } from "@/components/location-notification"
 import { Button } from "@/components/ui/button"
-import { MapPin, List, X, Check } from "lucide-react"
+import { MapPin, List, X, Check, Leaf, Clock, Sparkles } from "lucide-react"
 import { useMobile } from "@/hooks/use-mobile"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { VisibleTrucksProvider } from "@/context/visible-trucks-context"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 
 export function HomeView() {
   const [viewMode, setViewMode] = useState<"map" | "list">("map")
@@ -19,6 +20,19 @@ export function HomeView() {
   const [locationPermissionGranted, setLocationPermissionGranted] = useState(false)
   const [showLocationSuccess, setShowLocationSuccess] = useState(false)
   const locationPromptDismissed = useRef(false)
+  const [activeFilters, setActiveFilters] = useState<string[]>([])
+
+  // toggle a filter on/off
+  const toggleFilter = (filter: string) => {
+    if (activeFilters.includes(filter)) {
+      setActiveFilters(activeFilters.filter(f => f !== filter))
+    } else {
+      setActiveFilters([...activeFilters, filter])
+    }
+  }
+  
+  // check if a filter is active
+  const isActive = (filter: string) => activeFilters.includes(filter)
 
   // check if location prompt should be shown based on local storage
   useEffect(() => {
@@ -86,49 +100,12 @@ export function HomeView() {
   return (
     <VisibleTrucksProvider>
       <div className="flex flex-col min-h-[calc(100vh-4rem)] bg-background dark:bg-gray-900">
-        <FilterBar />
-
-        {/* view toggle buttons */}
-        <div className="flex justify-center my-2">
-          <motion.div 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="bg-background/80 dark:bg-gray-800/50 backdrop-blur-sm rounded-lg p-1 flex gap-1 border border-border/10 dark:border-gray-700/30 shadow-sm"
-          >
-            <motion.button
-              onClick={() => setViewMode("map")}
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              className={cn(
-                "flex items-center gap-1 px-3 py-1.5 rounded-md transition-all duration-200 cursor-pointer",
-                viewMode === "map" 
-                  ? "bg-gradient-to-r from-primary/90 to-primary text-primary-foreground shadow-sm" 
-                  : "text-muted-foreground hover:text-foreground hover:bg-background/90 dark:hover:bg-gray-800/90"
-              )}
-              aria-label="switch to map view"
-              aria-pressed={viewMode === "map"}
-            >
-              <MapPin className="w-4 h-4" />
-              <span className="text-sm font-medium">map</span>
-            </motion.button>
-            <motion.button
-              onClick={() => setViewMode("list")}
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              className={cn(
-                "flex items-center gap-1 px-3 py-1.5 rounded-md transition-all duration-200 cursor-pointer",
-                viewMode === "list" 
-                  ? "bg-gradient-to-r from-primary/90 to-primary text-primary-foreground shadow-sm" 
-                  : "text-muted-foreground hover:text-foreground hover:bg-background/90 dark:hover:bg-gray-800/90"
-              )}
-              aria-label="switch to list view"
-              aria-pressed={viewMode === "list"}
-            >
-              <List className="w-4 h-4" />
-              <span className="text-sm font-medium">list</span>
-            </motion.button>
-          </motion.div>
+        {/* filter bar with integrated view toggle */}
+        <div className="bg-background/80 backdrop-blur-md border-b border-border/30 dark:border-border/10 py-3 px-4 dark:bg-gray-900/90">
+          <FilterBar 
+            viewMode={viewMode} 
+            setViewMode={setViewMode} 
+          />
         </div>
 
         <section className="relative flex-1 overflow-hidden" aria-live="polite">
@@ -146,13 +123,15 @@ export function HomeView() {
             }}
             transition={{ duration: 0.3 }}
           >
-            <MapView locationPermissionGranted={locationPermissionGranted} />
+            <MapView 
+              locationPermissionGranted={locationPermissionGranted} 
+            />
           </motion.div>
           
           {/* only render the list when in list view for performance */}
           {viewMode === "list" && (
             <motion.div
-              className="h-full overflow-y-auto pb-20 scrollbar-thin scrollbar-thumb-muted-foreground/20 scrollbar-track-transparent"
+              className="relative h-full overflow-y-auto pb-20 scrollbar-thin scrollbar-thumb-muted-foreground/20 scrollbar-track-transparent"
               aria-label="list view of food trucks"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -213,11 +192,11 @@ export function HomeView() {
               role="status"
               aria-live="polite"
             >
-              <div className="bg-background/90 dark:bg-gray-800/80 backdrop-blur-md shadow-lg rounded-full px-5 py-3 flex items-center gap-3 border border-border/10 dark:border-gray-700/30">
-                <div className="flex-shrink-0 h-8 w-8 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-                  <Check className="h-4 w-4 text-green-600 dark:text-green-400" aria-hidden="true" />
+              <div className="bg-green-500/90 dark:bg-green-600/90 backdrop-blur-md shadow-lg rounded-full px-5 py-3 max-w-md flex items-center gap-3 border border-green-400/30">
+                <div className="flex-shrink-0 h-8 w-8 rounded-full bg-white/20 flex items-center justify-center">
+                  <Check className="h-4 w-4 text-white" aria-hidden="true" />
                 </div>
-                <p className="text-sm">location access granted! map centered on your location</p>
+                <p className="text-sm text-white">location access enabled! we'll show you nearby food trucks</p>
               </div>
             </motion.div>
           )}
