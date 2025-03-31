@@ -51,7 +51,7 @@ export const foodTrucks: FoodTruck[] = [
       {
         name: "Nachos Supreme",
         price: 9.99,
-        description: "Tortilla chips, beef, beans, cheese, sour cream, jalapeños",
+        description: "Tortilla chips, beef, beans, cheese, guacamole, sour cream, jalapeños",
       },
     ],
     reviews: [
@@ -80,6 +80,46 @@ export const foodTrucks: FoodTruck[] = [
         text: "Authentic flavors and generous portions. Will definitely be back!",
       },
     ],
+    upcomingSchedule: [
+      {
+        date: "Mon, Apr 7, 2025",
+        hours: "11:00 AM - 8:00 PM",
+        location: "Nicollet Mall, Downtown Minneapolis",
+        coordinates: {
+          latitude: 44.9778,
+          longitude: -93.2682
+        }
+      },
+      {
+        date: "Wed, Apr 9, 2025",
+        hours: "11:00 AM - 8:00 PM",
+        location: "Loring Park, Minneapolis",
+        coordinates: {
+          latitude: 44.9690,
+          longitude: -93.2850
+        },
+        notes: "Part of the Midweek Food Truck Festival"
+      },
+      {
+        date: "Fri, Apr 11, 2025",
+        hours: "4:00 PM - 10:00 PM",
+        location: "Northeast Minneapolis Brewery District",
+        coordinates: {
+          latitude: 45.0020,
+          longitude: -93.2650
+        },
+        notes: "Live music from 6-9pm"
+      },
+      {
+        date: "Sat, Apr 12, 2025",
+        hours: "11:00 AM - 9:00 PM",
+        location: "Lake Calhoun, Minneapolis",
+        coordinates: {
+          latitude: 44.9495,
+          longitude: -93.3102
+        }
+      }
+    ]
   },
   {
     id: "2",
@@ -149,6 +189,36 @@ export const foodTrucks: FoodTruck[] = [
         text: "Best burger I've had in the Twin Cities. The special sauce is amazing!",
       },
     ],
+    upcomingSchedule: [
+      {
+        date: "Tue, Apr 8, 2025",
+        hours: "11:00 AM - 7:00 PM",
+        location: "Downtown St. Paul, Mears Park",
+        coordinates: {
+          latitude: 44.9486,
+          longitude: -93.0850
+        }
+      },
+      {
+        date: "Thu, Apr 10, 2025",
+        hours: "11:00 AM - 8:00 PM",
+        location: "University of Minnesota Campus",
+        coordinates: {
+          latitude: 44.9740,
+          longitude: -93.2277
+        }
+      },
+      {
+        date: "Sat, Apr 12, 2025",
+        hours: "9:00 AM - 2:00 PM",
+        location: "St. Paul Farmers Market",
+        coordinates: {
+          latitude: 44.9522,
+          longitude: -93.0873
+        },
+        notes: "Special breakfast menu available until 11am"
+      }
+    ]
   },
   {
     id: "3",
@@ -206,6 +276,36 @@ export const foodTrucks: FoodTruck[] = [
         text: "Authentic flavors and beautiful presentation. Will definitely return!",
       },
     ],
+    upcomingSchedule: [
+      {
+        date: "Mon, Apr 7, 2025",
+        hours: "11:30 AM - 7:30 PM",
+        location: "Downtown Minneapolis, Government Center",
+        coordinates: {
+          latitude: 44.9760,
+          longitude: -93.2650
+        }
+      },
+      {
+        date: "Wed, Apr 9, 2025",
+        hours: "11:30 AM - 7:30 PM",
+        location: "Uptown Minneapolis, Lake & Hennepin",
+        coordinates: {
+          latitude: 44.9482,
+          longitude: -93.2982
+        }
+      },
+      {
+        date: "Fri, Apr 11, 2025",
+        hours: "5:00 PM - 10:00 PM",
+        location: "Northeast Food Truck Rally",
+        coordinates: {
+          latitude: 45.0020,
+          longitude: -93.2650
+        },
+        notes: "Part of the Friday Night Food Truck Rally"
+      }
+    ]
   },
   {
     id: "4",
@@ -263,6 +363,45 @@ export const foodTrucks: FoodTruck[] = [
         text: "Best pizza in Northeast! The wood-fired flavor makes all the difference.",
       },
     ],
+    upcomingSchedule: [
+      {
+        date: "Tue, Apr 8, 2025",
+        hours: "11:00 AM - 2:00 PM",
+        location: "Mayo Clinic Square, Minneapolis",
+        coordinates: {
+          latitude: 44.9790,
+          longitude: -93.2760
+        }
+      },
+      {
+        date: "Thu, Apr 10, 2025",
+        hours: "11:00 AM - 2:00 PM",
+        location: "Downtown Minneapolis, Marquette Ave",
+        coordinates: {
+          latitude: 44.9770,
+          longitude: -93.2700
+        }
+      },
+      {
+        date: "Sat, Apr 12, 2025",
+        hours: "11:00 AM - 8:00 PM",
+        location: "Mill City Farmers Market",
+        coordinates: {
+          latitude: 44.9800,
+          longitude: -93.2560
+        }
+      },
+      {
+        date: "Sun, Apr 13, 2025",
+        hours: "10:00 AM - 3:00 PM",
+        location: "Linden Hills Farmers Market",
+        coordinates: {
+          latitude: 44.9230,
+          longitude: -93.3150
+        },
+        notes: "Special brunch menu available"
+      }
+    ]
   },
   {
     id: "5",
@@ -320,6 +459,36 @@ export const foodTrucks: FoodTruck[] = [
         text: "Great treats but limited seating. Definitely worth the wait though!",
       },
     ],
+    upcomingSchedule: [
+      {
+        date: "Mon, Apr 7, 2025",
+        hours: "3:00 PM - 9:00 PM",
+        location: "Minnehaha Park, Minneapolis",
+        coordinates: {
+          latitude: 44.9150,
+          longitude: -93.2110
+        }
+      },
+      {
+        date: "Wed, Apr 9, 2025",
+        hours: "3:00 PM - 9:00 PM",
+        location: "Lake Nokomis, Minneapolis",
+        coordinates: {
+          latitude: 44.9080,
+          longitude: -93.2470
+        }
+      },
+      {
+        date: "Fri, Apr 11, 2025 - Sun, Apr 13, 2025",
+        hours: "12:00 PM - 10:00 PM",
+        location: "Harriet Island, St. Paul",
+        coordinates: {
+          latitude: 44.9380,
+          longitude: -93.0980
+        },
+        notes: "Part of the Spring Food Festival"
+      }
+    ]
   },
   {
     id: "6",
@@ -377,6 +546,36 @@ export const foodTrucks: FoodTruck[] = [
         text: "Best poutine in the Twin Cities. Great for a late-night snack!",
       },
     ],
+    upcomingSchedule: [
+      {
+        date: "Tue, Apr 8, 2025",
+        hours: "11:00 AM - 7:00 PM",
+        location: "Downtown Minneapolis, Nicollet Mall",
+        coordinates: {
+          latitude: 44.9778,
+          longitude: -93.2682
+        }
+      },
+      {
+        date: "Thu, Apr 10, 2025",
+        hours: "11:00 AM - 7:00 PM",
+        location: "North Loop, Minneapolis",
+        coordinates: {
+          latitude: 44.9895,
+          longitude: -93.2750
+        }
+      },
+      {
+        date: "Sat, Apr 12, 2025 - Sun, Apr 13, 2025",
+        hours: "10:00 AM - 6:00 PM",
+        location: "Midtown Global Market",
+        coordinates: {
+          latitude: 44.9480,
+          longitude: -93.2610
+        },
+        notes: "Special weekend menu with new seasonal items"
+      }
+    ]
   },
   {
     id: "7",
@@ -434,5 +633,35 @@ export const foodTrucks: FoodTruck[] = [
         text: "Unique concept and tasty waffles. A bit pricey but worth it for the quality.",
       },
     ],
+    upcomingSchedule: [
+      {
+        date: "Mon, Apr 7, 2025",
+        hours: "7:00 AM - 2:00 PM",
+        location: "Downtown Minneapolis, 5th & Nicollet",
+        coordinates: {
+          latitude: 44.9778,
+          longitude: -93.2682
+        }
+      },
+      {
+        date: "Wed, Apr 9, 2025",
+        hours: "7:00 AM - 2:00 PM",
+        location: "Downtown St. Paul, Rice Park",
+        coordinates: {
+          latitude: 44.9445,
+          longitude: -93.0960
+        }
+      },
+      {
+        date: "Sat, Apr 12, 2025",
+        hours: "8:00 AM - 3:00 PM",
+        location: "Minneapolis Farmers Market",
+        coordinates: {
+          latitude: 44.9840,
+          longitude: -93.2880
+        },
+        notes: "Featuring special weekend-only menu items"
+      }
+    ]
   }
 ]

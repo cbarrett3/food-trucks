@@ -37,4 +37,14 @@ export interface FoodTruck {
     date: string
     text: string
   }[]
+  upcomingSchedule: {
+    date: string
+    hours: string
+    location: string
+    coordinates?: {
+      latitude: number
+      longitude: number
+    }
+    notes?: string
+  }[]
 }
