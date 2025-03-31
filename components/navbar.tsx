@@ -15,14 +15,14 @@ import { motion, AnimatePresence } from "framer-motion"
 const navLinks = [
   { href: "/", label: "explore" },
   { href: "/map", label: "map" },
-  { href: "/vendors", label: "for vendors" },
+  { href: "/operator/dashboard", label: "for vendors" },
 ]
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const pathname = usePathname()
-  const { openLoginModal } = useAuth()
+  const { openLoginModal, isAuthenticated } = useAuth()
 
   // handle scroll event to add shadow to navbar when scrolled
   useEffect(() => {
@@ -63,7 +63,7 @@ export function Navbar() {
         </Link>
 
         {/* desktop navigation */}
-        <DesktopNav pathname={pathname} />
+        <DesktopNav pathname={pathname} openLoginModal={openLoginModal} isAuthenticated={isAuthenticated} />
 
         {/* search and actions */}
         <DesktopActions openLoginModal={openLoginModal} />
@@ -97,7 +97,7 @@ export function Navbar() {
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2 }}
           >
-            <MobileMenu pathname={pathname} id="mobile-menu" openLoginModal={openLoginModal} />
+            <MobileMenu pathname={pathname} id="mobile-menu" openLoginModal={openLoginModal} isAuthenticated={isAuthenticated} />
           </motion.div>
         )}
       </AnimatePresence>
@@ -105,7 +105,7 @@ export function Navbar() {
   )
 }
 
-function DesktopNav({ pathname }: { pathname: string }) {
+function DesktopNav({ pathname, openLoginModal, isAuthenticated }: { pathname: string; openLoginModal: (initialTab?: "login" | "signup") => void; isAuthenticated: boolean }) {
   return (
     <nav className="hidden md:flex items-center space-x-6">
       {navLinks.map((link) => (
@@ -174,10 +174,11 @@ function DesktopActions({ openLoginModal }: { openLoginModal: (initialTab?: "log
   )
 }
 
-function MobileMenu({ pathname, id, openLoginModal }: { 
+function MobileMenu({ pathname, id, openLoginModal, isAuthenticated }: { 
   pathname: string; 
   id: string; 
-  openLoginModal: (initialTab?: "login" | "signup") => void 
+  openLoginModal: (initialTab?: "login" | "signup") => void; 
+  isAuthenticated: boolean 
 }) {
   return (
     <div className="md:hidden border-t border-border/10 dark:border-gray-800/30" id={id}>
@@ -201,18 +202,12 @@ function MobileMenu({ pathname, id, openLoginModal }: {
               <Link
                 href={link.href}
                 className={cn(
-                  "p-2 text-sm font-medium rounded-md transition-colors flex items-center",
-                  pathname === link.href 
-                    ? "bg-muted/80 dark:bg-gray-800/50 text-foreground" 
-                    : "text-foreground/60 hover:text-foreground/80 hover:bg-muted/50 dark:hover:bg-gray-800/30"
+                  "block py-2 px-3 rounded-md transition-colors",
+                  pathname === link.href
+                    ? "bg-muted/80 dark:bg-gray-800/50 text-foreground"
+                    : "text-foreground/70 hover:bg-muted/50 dark:hover:bg-gray-800/30 hover:text-foreground"
                 )}
               >
-                {pathname === link.href && (
-                  <motion.span
-                    layoutId="mobileNavIndicator"
-                    className="w-1 h-4 bg-gradient-to-b from-primary/80 to-primary rounded-full mr-2"
-                  />
-                )}
                 {link.label}
               </Link>
             </motion.div>

@@ -1,6 +1,14 @@
-import { OperatorDashboard } from "@/components/operator-dashboard"
+"use client"
 
-export default function OperatorPage() {
-  return <OperatorDashboard />
+import { useEffect } from "react"
+import { useRouter } from "next/navigation"
+
+export default function OperatorRedirectPage() {
+  const router = useRouter()
+  
+  useEffect(() => {
+    router.replace("/operator/dashboard")
+  }, [router])
+  
+  return null
 }
-
