@@ -152,7 +152,7 @@ export function FilterBar({ onFilterClick, viewMode = "map", setViewMode }: Filt
         >
           <button
             onClick={() => setSearchExpanded(true)}
-            className="flex items-center w-full rounded-full border border-border/30 dark:border-gray-700/50 bg-background/80 dark:bg-gray-800/70 shadow-sm py-2.5 px-4"
+            className="flex items-center w-full rounded-full border border-border/30 dark:border-gray-700/50 bg-background/80 dark:bg-gray-800/70 shadow-sm py-2.5 px-4 hover:cursor-pointer"
             aria-label="expand search options"
           >
             <Search className="h-4 w-4 text-muted-foreground mr-2" />
@@ -185,7 +185,7 @@ export function FilterBar({ onFilterClick, viewMode = "map", setViewMode }: Filt
                     {/* Airbnb-style circular close button in top-left */}
                     <motion.button 
                       onClick={() => setSearchExpanded(false)}
-                      className="absolute top-3 left-4 rounded-full p-2.5 bg-background dark:bg-gray-800 border border-border/20 dark:border-gray-700/50 hover:bg-muted/80 flex items-center justify-center shadow-sm z-10"
+                      className="absolute top-3 left-4 rounded-full p-2.5 bg-background dark:bg-gray-800 border border-border/20 dark:border-gray-700/50 hover:bg-muted/80 flex items-center justify-center shadow-sm z-10 hover:cursor-pointer"
                       aria-label="close search"
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
@@ -238,7 +238,7 @@ export function FilterBar({ onFilterClick, viewMode = "map", setViewMode }: Filt
                           {searchQuery && (
                             <button 
                               onClick={handleClearSearch}
-                              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground hover:cursor-pointer"
                               aria-label="clear search"
                             >
                               <X className="h-4 w-4" />
@@ -280,7 +280,7 @@ export function FilterBar({ onFilterClick, viewMode = "map", setViewMode }: Filt
                               size="sm"
                               onClick={() => toggleFilter('vegetarian')}
                               className={cn(
-                                "rounded-full border-input/30 dark:border-gray-700/50 whitespace-nowrap transition-all duration-200 cursor-pointer h-10",
+                                "rounded-full border-input/30 dark:border-gray-700/50 whitespace-nowrap transition-all duration-200 cursor-pointer h-10 hover:cursor-pointer",
                                 "hover:shadow-sm hover:border-primary/30 focus:ring-2 focus:ring-primary/20",
                                 isActive('vegetarian') 
                                   ? "bg-gradient-to-r from-primary/90 to-primary text-primary-foreground border-primary shadow-sm" 
@@ -300,7 +300,7 @@ export function FilterBar({ onFilterClick, viewMode = "map", setViewMode }: Filt
                               size="sm"
                               onClick={() => toggleFilter('vegan')}
                               className={cn(
-                                "rounded-full border-input/30 dark:border-gray-700/50 whitespace-nowrap transition-all duration-200 cursor-pointer h-10",
+                                "rounded-full border-input/30 dark:border-gray-700/50 whitespace-nowrap transition-all duration-200 cursor-pointer h-10 hover:cursor-pointer",
                                 "hover:shadow-sm hover:border-primary/30 focus:ring-2 focus:ring-primary/20",
                                 isActive('vegan') 
                                   ? "bg-gradient-to-r from-primary/90 to-primary text-primary-foreground border-primary shadow-sm" 
@@ -320,7 +320,7 @@ export function FilterBar({ onFilterClick, viewMode = "map", setViewMode }: Filt
                               size="sm"
                               onClick={() => toggleFilter('recentlyAdded')}
                               className={cn(
-                                "rounded-full border-input/30 dark:border-gray-700/50 whitespace-nowrap transition-all duration-200 cursor-pointer h-10",
+                                "rounded-full border-input/30 dark:border-gray-700/50 whitespace-nowrap transition-all duration-200 cursor-pointer h-10 hover:cursor-pointer",
                                 "hover:shadow-sm hover:border-primary/30 focus:ring-2 focus:ring-primary/20",
                                 isActive('recentlyAdded') 
                                   ? "bg-gradient-to-r from-primary/90 to-primary text-primary-foreground border-primary shadow-sm" 
@@ -340,7 +340,7 @@ export function FilterBar({ onFilterClick, viewMode = "map", setViewMode }: Filt
                               size="sm"
                               onClick={() => toggleFilter('openNow')}
                               className={cn(
-                                "rounded-full border-input/30 dark:border-gray-700/50 whitespace-nowrap transition-all duration-200 cursor-pointer h-10",
+                                "rounded-full border-input/30 dark:border-gray-700/50 whitespace-nowrap transition-all duration-200 cursor-pointer h-10 hover:cursor-pointer",
                                 "hover:shadow-sm hover:border-primary/30 focus:ring-2 focus:ring-primary/20",
                                 isActive('openNow') 
                                   ? "bg-gradient-to-r from-primary/90 to-primary text-primary-foreground border-primary shadow-sm" 
@@ -374,7 +374,7 @@ export function FilterBar({ onFilterClick, viewMode = "map", setViewMode }: Filt
                                 "flex items-center justify-center gap-1.5 px-3 py-1 rounded-md transition-all duration-200 cursor-pointer flex-1",
                                 viewMode === "map" 
                                   ? "bg-gradient-to-r from-primary/90 to-primary text-primary-foreground shadow-sm" 
-                                  : "text-muted-foreground hover:text-foreground hover:bg-background/90 dark:hover:bg-gray-800/90"
+                                  : "text-muted-foreground hover:text-foreground hover:bg-background/90 dark:hover:bg-gray-800/90 hover:cursor-pointer"
                               )}
                               aria-label="switch to map view"
                               aria-pressed={viewMode === "map"}
@@ -390,7 +390,7 @@ export function FilterBar({ onFilterClick, viewMode = "map", setViewMode }: Filt
                                 "flex items-center justify-center gap-1.5 px-3 py-1 rounded-md transition-all duration-200 cursor-pointer flex-1",
                                 viewMode === "list" 
                                   ? "bg-gradient-to-r from-primary/90 to-primary text-primary-foreground shadow-sm" 
-                                  : "text-muted-foreground hover:text-foreground hover:bg-background/90 dark:hover:bg-gray-800/90"
+                                  : "text-muted-foreground hover:text-foreground hover:bg-background/90 dark:hover:bg-gray-800/90 hover:cursor-pointer"
                               )}
                               aria-label="switch to list view"
                               aria-pressed={viewMode === "list"}
@@ -413,7 +413,7 @@ export function FilterBar({ onFilterClick, viewMode = "map", setViewMode }: Filt
                       whileTap={{ scale: 0.98 }}
                     >
                       <Button 
-                        className="w-full rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground h-12 text-base font-medium shadow-md"
+                        className="w-full rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground h-12 text-base font-medium shadow-md hover:cursor-pointer"
                         onClick={handleSearchSubmit}
                       >
                         Search
@@ -428,7 +428,7 @@ export function FilterBar({ onFilterClick, viewMode = "map", setViewMode }: Filt
                       transition={{ delay: 0.5, duration: 0.3 }}
                     >
                       <button 
-                        className="text-sm font-medium text-primary hover:underline"
+                        className="text-sm font-medium text-primary hover:underline hover:cursor-pointer"
                         onClick={() => {
                           setSearchQuery("");
                           setRadius(5);
@@ -476,7 +476,7 @@ export function FilterBar({ onFilterClick, viewMode = "map", setViewMode }: Filt
                     {searchQuery && (
                       <button 
                         onClick={handleClearSearch}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground hover:cursor-pointer"
                         aria-label="clear search"
                       >
                         <X className="h-4 w-4" />
@@ -490,7 +490,7 @@ export function FilterBar({ onFilterClick, viewMode = "map", setViewMode }: Filt
                       <PopoverTrigger asChild>
                         <Button 
                           variant="outline" 
-                          className="bg-background/50 dark:bg-gray-800/50 border-input/30 dark:border-gray-700/50 rounded-full h-10 w-full sm:w-auto"
+                          className="bg-background/50 dark:bg-gray-800/50 border-input/30 dark:border-gray-700/50 rounded-full h-10 w-full sm:w-auto hover:cursor-pointer"
                           aria-label="select search radius in miles"
                         >
                           <span className="mr-1">{radius} miles</span>
@@ -533,7 +533,7 @@ export function FilterBar({ onFilterClick, viewMode = "map", setViewMode }: Filt
                         size="sm"
                         onClick={() => toggleFilter('vegetarian')}
                         className={cn(
-                          "rounded-full border-input/30 dark:border-gray-700/50 whitespace-nowrap transition-all duration-200 cursor-pointer h-9",
+                          "rounded-full border-input/30 dark:border-gray-700/50 whitespace-nowrap transition-all duration-200 cursor-pointer h-9 hover:cursor-pointer",
                           "hover:shadow-sm hover:border-primary/30 focus:ring-2 focus:ring-primary/20",
                           isActive('vegetarian') 
                             ? "bg-gradient-to-r from-primary/90 to-primary text-primary-foreground border-primary shadow-sm" 
@@ -553,7 +553,7 @@ export function FilterBar({ onFilterClick, viewMode = "map", setViewMode }: Filt
                         size="sm"
                         onClick={() => toggleFilter('vegan')}
                         className={cn(
-                          "rounded-full border-input/30 dark:border-gray-700/50 whitespace-nowrap transition-all duration-200 cursor-pointer h-9",
+                          "rounded-full border-input/30 dark:border-gray-700/50 whitespace-nowrap transition-all duration-200 cursor-pointer h-9 hover:cursor-pointer",
                           "hover:shadow-sm hover:border-primary/30 focus:ring-2 focus:ring-primary/20",
                           isActive('vegan') 
                             ? "bg-gradient-to-r from-primary/90 to-primary text-primary-foreground border-primary shadow-sm" 
@@ -573,7 +573,7 @@ export function FilterBar({ onFilterClick, viewMode = "map", setViewMode }: Filt
                         size="sm"
                         onClick={() => toggleFilter('recentlyAdded')}
                         className={cn(
-                          "rounded-full border-input/30 dark:border-gray-700/50 whitespace-nowrap transition-all duration-200 cursor-pointer h-9",
+                          "rounded-full border-input/30 dark:border-gray-700/50 whitespace-nowrap transition-all duration-200 cursor-pointer h-9 hover:cursor-pointer",
                           "hover:shadow-sm hover:border-primary/30 focus:ring-2 focus:ring-primary/20",
                           isActive('recentlyAdded') 
                             ? "bg-gradient-to-r from-primary/90 to-primary text-primary-foreground border-primary shadow-sm" 
@@ -593,7 +593,7 @@ export function FilterBar({ onFilterClick, viewMode = "map", setViewMode }: Filt
                         size="sm"
                         onClick={() => toggleFilter('openNow')}
                         className={cn(
-                          "rounded-full border-input/30 dark:border-gray-700/50 whitespace-nowrap transition-all duration-200 cursor-pointer h-9",
+                          "rounded-full border-input/30 dark:border-gray-700/50 whitespace-nowrap transition-all duration-200 cursor-pointer h-9 hover:cursor-pointer",
                           "hover:shadow-sm hover:border-primary/30 focus:ring-2 focus:ring-primary/20",
                           isActive('openNow') 
                             ? "bg-gradient-to-r from-primary/90 to-primary text-primary-foreground border-primary shadow-sm" 
@@ -625,7 +625,7 @@ export function FilterBar({ onFilterClick, viewMode = "map", setViewMode }: Filt
                             "flex items-center gap-1 px-3 py-1 rounded-md transition-all duration-200 cursor-pointer",
                             viewMode === "map" 
                               ? "bg-gradient-to-r from-primary/90 to-primary text-primary-foreground shadow-sm" 
-                              : "text-muted-foreground hover:text-foreground hover:bg-background/90 dark:hover:bg-gray-800/90"
+                              : "text-muted-foreground hover:text-foreground hover:bg-background/90 dark:hover:bg-gray-800/90 hover:cursor-pointer"
                           )}
                           aria-label="switch to map view"
                           aria-pressed={viewMode === "map"}
@@ -641,7 +641,7 @@ export function FilterBar({ onFilterClick, viewMode = "map", setViewMode }: Filt
                             "flex items-center gap-1 px-3 py-1 rounded-md transition-all duration-200 cursor-pointer",
                             viewMode === "list" 
                               ? "bg-gradient-to-r from-primary/90 to-primary text-primary-foreground shadow-sm" 
-                              : "text-muted-foreground hover:text-foreground hover:bg-background/90 dark:hover:bg-gray-800/90"
+                              : "text-muted-foreground hover:text-foreground hover:bg-background/90 dark:hover:bg-gray-800/90 hover:cursor-pointer"
                           )}
                           aria-label="switch to list view"
                           aria-pressed={viewMode === "list"}
