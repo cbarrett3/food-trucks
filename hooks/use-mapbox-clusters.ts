@@ -8,6 +8,12 @@ import { FoodTruck } from "@/types/food-truck"
 const CLUSTER_MAX_ZOOM = 14
 const CLUSTER_RADIUS = 50
 const DEFAULT_ZOOM = 12
+const CLUSTER_PROPERTIES = {
+  // optimize cluster performance by pre-computing properties
+  sum: ['+', ['get', 'rating']],
+  avg_rating: ['/', ['get', 'sum'], ['get', 'point_count']],
+  has_open: ['any', ['get', 'isOpen']]
+}
 
 interface UseMapboxClusterProps {
   map: React.RefObject<mapboxgl.Map | null>
@@ -22,7 +28,19 @@ export function useMapboxCluster({ map, onTruckSelect }: UseMapboxClusterProps) 
   const setupClusters = useCallback((foodTrucks: FoodTruck[]) => {
     if (!map.current) return
 
-    // add a source for food truck clusters
+    // check if source already exists and remove it to prevent memory leaks
+    if (map.current.getSource('food-trucks')) {
+      // remove existing layers first
+      if (map.current.getLayer('clusters')) map.current.removeLayer('clusters')
+      if (map.current.getLayer('cluster-count')) map.current.removeLayer('cluster-count')
+      if (map.current.getLayer('unclustered-point')) map.current.removeLayer('unclustered-point')
+      if (map.current.getLayer('food-truck-label')) map.current.removeLayer('food-truck-label')
+      
+      // then remove the source
+      map.current.removeSource('food-trucks')
+    }
+
+    // add a source for food truck clusters with optimized properties
     map.current.addSource('food-trucks', {
       type: 'geojson',
       data: {
@@ -45,7 +63,9 @@ export function useMapboxCluster({ map, onTruckSelect }: UseMapboxClusterProps) 
       },
       cluster: true,
       clusterMaxZoom: CLUSTER_MAX_ZOOM,
-      clusterRadius: CLUSTER_RADIUS
+      clusterRadius: CLUSTER_RADIUS,
+      clusterProperties: CLUSTER_PROPERTIES,
+      maxzoom: 18
     })
     
     // add a layer for clusters
@@ -76,7 +96,9 @@ export function useMapboxCluster({ map, onTruckSelect }: UseMapboxClusterProps) 
           '#ef4444'  // red for count >= 50
         ],
         'circle-stroke-width': 2,
-        'circle-stroke-color': '#ffffff'
+        'circle-stroke-color': '#ffffff',
+        'circle-opacity': 0.9, // slight transparency for better performance
+        'circle-pitch-alignment': 'map' // better performance than viewport alignment
       }
     })
     
@@ -89,7 +111,9 @@ export function useMapboxCluster({ map, onTruckSelect }: UseMapboxClusterProps) 
       layout: {
         'text-field': '{point_count_abbreviated}',
         'text-font': ['DIN Pro Medium', 'Arial Unicode MS Bold'],
-        'text-size': 14
+        'text-size': 14,
+        'text-allow-overlap': false, // better performance
+        'symbol-sort-key': ['get', 'point_count'] // prioritize rendering larger clusters
       },
       paint: {
         'text-color': '#ffffff'
@@ -111,7 +135,9 @@ export function useMapboxCluster({ map, onTruckSelect }: UseMapboxClusterProps) 
           '#aaaaaa' // gray for closed trucks
         ],
         'circle-stroke-width': 2,
-        'circle-stroke-color': '#ffffff'
+        'circle-stroke-color': '#ffffff',
+        'circle-opacity': 0.9, // slight transparency for better performance
+        'circle-pitch-alignment': 'map' // better performance than viewport alignment
       }
     })
     
@@ -129,6 +155,8 @@ export function useMapboxCluster({ map, onTruckSelect }: UseMapboxClusterProps) 
         'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
         'text-radial-offset': 1.5,
         'text-optional': true,
+        'text-allow-overlap': false, // better performance
+        'symbol-sort-key': ['-', ['get', 'rating']] // prioritize higher rated trucks
       },
       paint: {
         'text-color': '#333333',

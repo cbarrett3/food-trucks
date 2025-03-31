@@ -18,6 +18,9 @@ const defaultLatitude = 44.9778
 const defaultLongitude = -93.2650
 const defaultZoom = 12
 
+// performance optimization settings
+const MAP_MOVE_DELAY = 100 // ms to delay updates for better performance
+
 // types for props
 interface MapboxComponentProps {
   theme?: string;
@@ -75,6 +78,7 @@ export default function MapboxComponent({
   }, [])
   
   // save map position when it changes
+  const mapMoveTimeout = useRef<NodeJS.Timeout | null>(null)
   const saveMapPosition = useCallback(() => {
     if (!map.current) return
     
@@ -87,8 +91,17 @@ export default function MapboxComponent({
     }
     
     // update visible trucks context with new map bounds
-    const bounds = map.current.getBounds()
-    setMapBounds(bounds)
+    // use a timeout to prevent excessive updates during rapid movements
+    if (mapMoveTimeout.current) {
+      clearTimeout(mapMoveTimeout.current)
+    }
+    
+    mapMoveTimeout.current = setTimeout(() => {
+      const bounds = map.current?.getBounds()
+      if (bounds) {
+        setMapBounds(bounds)
+      }
+    }, MAP_MOVE_DELAY)
   }, [setMapBounds])
   
   // update user location marker
@@ -172,7 +185,7 @@ export default function MapboxComponent({
     // set mapbox access token
     mapboxgl.accessToken = mapboxToken
     
-    // create map
+    // create map with performance optimizations
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: theme === 'dark' ? 'mapbox://styles/mapbox/dark-v11' : mapboxStyle,
@@ -181,6 +194,10 @@ export default function MapboxComponent({
       dragRotate: false,
       touchZoomRotate: false,
       cooperativeGestures: true,
+      attributionControl: false, // we'll add it manually for better placement
+      renderWorldCopies: false, // performance optimization
+      fadeDuration: 100, // faster transitions for better performance
+      preserveDrawingBuffer: false, // performance optimization
     })
     
     // add navigation control
