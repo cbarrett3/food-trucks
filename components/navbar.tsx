@@ -15,7 +15,8 @@ import { motion, AnimatePresence } from "framer-motion"
 const navLinks = [
   { href: "/", label: "explore" },
   { href: "/map", label: "map" },
-  { href: "/operator/dashboard", label: "for vendors" },
+  { href: "/operator/dashboard", label: "for trucks" },
+  { href: "/truckies", label: "for truckies" },
 ]
 
 export function Navbar() {
